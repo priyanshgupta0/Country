@@ -238,7 +238,6 @@ describe('Country Component', () => {
     await waitFor(() => {
       expect(fetch).toHaveBeenCalled();
     });
-
   });
   it('displays an error on fetch error', async () => {
     // Mock the fetch error
@@ -248,7 +247,8 @@ describe('Country Component', () => {
         json: () => Promise.resolve(mockError), // this is the response that contains all the astroid information
       }),
     );
-    const mockConsoleLog = jest.spyOn(console, 'log');
+    // const mockConsoleLog = jest.spyOn(console, 'log');
+    const mockAlert = jest.spyOn(Alert, 'alert');
 
     const {getByTestId} = render(
       <Country route={{params: {dataToPass: mockDataToPass}}} />,
@@ -259,7 +259,8 @@ describe('Country Component', () => {
 
     // Wait for the alert to appear
     await waitFor(() => {
-      expect(mockConsoleLog).toHaveBeenCalledWith(mockError);
+      // expect(mockConsoleLog).toHaveBeenCalledWith(mockError);
+      expect(mockAlert).toHaveBeenCalledWith('Error', 'Something Went Wrong');
     });
   });
 });

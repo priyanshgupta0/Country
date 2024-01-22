@@ -30,7 +30,7 @@ function Home({navigation, route}: any) {
         Alert.alert('Alert', data.message);
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert('Error', "Something went wrong");
     }
   };
 
