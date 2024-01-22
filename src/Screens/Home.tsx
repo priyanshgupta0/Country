@@ -34,7 +34,7 @@ class Home extends Component<any> {
         Alert.alert('Alert', data.message);
       }
     } catch (error) {
-      console.log(error);
+      Alert.alert('Error', 'Something went wrong');
     }
   };
   render() {

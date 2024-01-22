@@ -108,7 +108,7 @@ describe('Home screeen', () => {
 
     global.fetch = jest.fn(() => Promise.reject(mockError));
 
-    const mockConsoleLog = jest.spyOn(console, 'log');
+    const mockAlert = jest.spyOn(Alert, 'alert');
 
     const {getByTestId} = render(<Home navigation={{navigate: jest.fn()}} />);
 
@@ -122,6 +122,6 @@ describe('Home screeen', () => {
     await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(1));
 
     // Expect console.log to be called with the error
-    expect(mockConsoleLog).toHaveBeenCalledWith(mockError);
+    expect(mockAlert).toHaveBeenCalledWith('Error', 'Something went wrong');
   });
 });

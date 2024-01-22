@@ -67,18 +67,13 @@ function Country({navigation, route}: any) {
   const fetchWeather = async () => {
     try {
       const response = await fetch(
-        'https://api.openweathermap.org/data/2.5/weather?lat=' +
-          dataToPass?.capitalInfo.latlng[0] +
-          '&lon=' +
-          dataToPass?.capitalInfo.latlng[1] +
-          '&appid=' +
-          API_key,
+        `https://api.openweathermap.org/data/2.5/weather?lat=${dataToPass?.capitalInfo.latlng[0]}&lon=${dataToPass?.capitalInfo.latlng[1]}&appid=${API_key}`,
       );
       const data = await response.json();
       console.log(data);
       setApiData(data);
     } catch (error) {
-      console.log(error);
+      Alert.alert('Error', 'Something went wrong');
     }
   };
 
@@ -88,6 +83,7 @@ function Country({navigation, route}: any) {
       <Image
         source={{uri: dataToPass?.flags.png}} // Replace with the actual URL
         style={styles.flagstyle}
+        alt={dataToPass?.flags.alt}
       />
       <Text style={styles.text}>Population : {dataToPass?.population}</Text>
       <Text style={styles.text}>Latitude : {dataToPass?.latlng[0]}</Text>
