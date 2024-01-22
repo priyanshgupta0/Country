@@ -59,8 +59,8 @@ interface WeatherInfo {
 }
 
 function Country({navigation, route}: any) {
-  const {dataToPass} = route.params;
-
+  const dataToPass = route.params.data;
+  console.log(dataToPass);
   const API_key = process.env.Wether_API_key;
   const [apiData, setApiData] = useState<WeatherInfo | null>(null);
 
@@ -106,7 +106,7 @@ function Country({navigation, route}: any) {
           <Text style={styles.text}>
             Temperature : {(apiData?.main.temp - 273.15).toFixed(2)}°C
           </Text>
-          <Text style={styles.text}>Wind Speed : {apiData?.wind.speed}</Text>
+          <Text style={styles.text}>Wind Speed : {apiData?.wind.speed}m/s</Text>
         </View>
       ) : null}
     </View>
