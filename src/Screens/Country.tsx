@@ -1,5 +1,4 @@
-import {RouteProp} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -57,56 +56,71 @@ interface WeatherInfo {
   name: string;
   cod: number;
 }
+interface State {
+  dataToPass: any; //
+  apiData: WeatherInfo | null;
+}
+class Country extends Component<any, State> {
+  constructor(props: {} | Readonly<{}>) {
+    super(props);
 
-function Country({navigation, route}: any) {
-  const dataToPass = route.params.data;
-  console.log(dataToPass);
-  const API_key = process.env.Wether_API_key;
-  const [apiData, setApiData] = useState<WeatherInfo | null>(null);
+    this.state = {
+      dataToPass: this.props.route.params.data,
+      apiData: null,
+    };
+  }
 
-  const fetchWeather = async () => {
+  API_key = process.env.Wether_API_key;
+  fetchWeather = async () => {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${dataToPass?.capitalInfo.latlng[0]}&lon=${dataToPass?.capitalInfo.latlng[1]}&appid=${API_key}`,
+        `https://api.openweathermap.org/data/2.5/weather?lat=${this.state.dataToPass?.capitalInfo.latlng[0]}&lon=${this.state.dataToPass?.capitalInfo.latlng[1]}&appid=${this.API_key}`,
       );
       const data = await response.json();
       console.log(data);
-      setApiData(data);
+      this.setState({apiData: data});
     } catch (error) {
       Alert.alert('Error', 'Something went wrong');
     }
   };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.Heading}>{dataToPass?.name.common}</Text>
-      <Image
-        source={{uri: dataToPass?.flags.png}} // Replace with the actual URL
-        style={styles.flagstyle}
-        alt={dataToPass?.flags.alt}
-      />
-      <Text style={styles.text}>Population : {dataToPass?.population}</Text>
-      <Text style={styles.text}>Latitude : {dataToPass?.latlng[0]}</Text>
-      <Text style={styles.text}>Longitude : {dataToPass?.latlng[1]}</Text>
-      {/* <Text style={styles.text}>{dataToPass?.capitalInfo.latlng[0]}</Text>
-      <Text style={styles.text}>{dataToPass?.capitalInfo.latlng[1]}</Text> */}
-      {/* <Text style={styles.text}>{API_key}</Text> */}
-      <TouchableOpacity
-        style={styles.activeButton}
-        onPress={fetchWeather}
-        testID="fetchWetherbutton">
-        <Text style={styles.buttonText}>Weather</Text>
-      </TouchableOpacity>
-      {apiData ? (
-        <View>
-          <Text style={styles.text}>
-            Temperature : {(apiData?.main.temp - 273.15).toFixed(2)}°C
-          </Text>
-          <Text style={styles.text}>Wind Speed : {apiData?.wind.speed}m/s</Text>
-        </View>
-      ) : null}
-    </View>
-  );
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.Heading}>{this.state.dataToPass?.name.common}</Text>
+        <Image
+          source={{uri: this.state.dataToPass?.flags.png}} // Replace with the actual URL
+          style={styles.flagstyle}
+          alt={this.state.dataToPass?.flags.alt}
+        />
+        <Text style={styles.text}>
+          Population : {this.state.dataToPass?.population}
+        </Text>
+        <Text style={styles.text}>
+          Latitude : {this.state.dataToPass?.latlng[0]}
+        </Text>
+        <Text style={styles.text}>
+          Longitude : {this.state.dataToPass?.latlng[1]}
+        </Text>
+        <TouchableOpacity
+          style={styles.activeButton}
+          onPress={this.fetchWeather}
+          testID="fetchWetherbutton">
+          <Text style={styles.buttonText}>Weather</Text>
+        </TouchableOpacity>
+        {this.state.apiData ? (
+          <View>
+            <Text style={styles.text}>
+              Temperature :{' '}
+              {(this.state.apiData?.main.temp - 273.15).toFixed(2)}°C
+            </Text>
+            <Text style={styles.text}>
+              Wind Speed : {this.state.apiData?.wind.speed}m/s
+            </Text>
+          </View>
+        ) : null}
+      </View>
+    );
+  }
 }
 
 export default Country;
