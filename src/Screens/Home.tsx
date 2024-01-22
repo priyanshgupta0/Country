@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Component} from 'react';
 import {
   View,
   Text,
@@ -12,18 +12,22 @@ import {
 const mobileW = Dimensions.get('window').width;
 const mobileH = Dimensions.get('window').height;
 
-function Home({navigation, route}: any) {
-  const API = process.env.API;
-  const [countryName, setCountryName] = useState<string>('');
+class Home extends Component<any> {
+  state = {
+    countryName: '',
+  };
+  API = process.env.API;
   //   const [weatherData, setWeatherData] = useState({});
 
-  const fetchData = async () => {
+  fetchData = async () => {
     try {
-      const response = await fetch(API + countryName + '?fullText=true');
+      const response = await fetch(
+        this.API + this.state.countryName + '?fullText=true',
+      );
       const data = await response.json();
       console.log(data);
       if (data?.status != 404) {
-        navigation.navigate('Country', {
+        this.props.navigation.navigate('Country', {
           data: data[0],
         });
       } else {
@@ -33,30 +37,35 @@ function Home({navigation, route}: any) {
       console.log(error);
     }
   };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.Heading}>Country Pedia 🌍</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Country Name"
-        value={countryName}
-        onChangeText={text => {
-          if (text.trim() !== '' || text == '') {
-            setCountryName(text);
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.Heading}>Country Pedia 🌍</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Country Name"
+          value={this.state.countryName}
+          onChangeText={text => {
+            if (text.trim() !== '' || text == '') {
+              this.setState({countryName: text});
+            }
+          }}
+          testID="countryInput"
+        />
+        <TouchableOpacity
+          style={
+            this.state.countryName == ''
+              ? styles.disabledButton
+              : styles.activeButton
           }
-        }}
-        testID="countryInput"
-      />
-      <TouchableOpacity
-        style={countryName == '' ? styles.disabledButton : styles.activeButton}
-        onPress={fetchData}
-        testID="nextButton"
-        disabled={countryName == ''}>
-        <Text style={styles.buttonText}>Next</Text>
-      </TouchableOpacity>
-    </View>
-  );
+          onPress={this.fetchData}
+          testID="nextButton"
+          disabled={this.state.countryName == ''}>
+          <Text style={styles.buttonText}>Next</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 export default Home;

@@ -107,23 +107,25 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator();
 
-const App: React.FC = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Home as React.ComponentType<any>}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Country"
-          component={Country as React.ComponentType<any>}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
+class App extends React.Component {
+  render() {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={Home as React.ComponentType<any>}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Country"
+            component={Country as React.ComponentType<any>}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
 
 export default App;
