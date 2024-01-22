@@ -41,7 +41,11 @@ function Home({navigation, route}: any) {
         style={styles.input}
         placeholder="Enter Country Name"
         value={countryName}
-        onChangeText={text => setCountryName(text)}
+        onChangeText={text => {
+          if (text.trim() !== '' || text == '') {
+            setCountryName(text);
+          }
+        }}
         testID="countryInput"
       />
       <TouchableOpacity

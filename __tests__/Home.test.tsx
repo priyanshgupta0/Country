@@ -20,6 +20,18 @@ describe('Home screeen', () => {
     fireEvent.changeText(input, 'India');
 
     expect(input.props.value).toBe('India');
+
+    // Simulate typing spaces into the TextInput
+    fireEvent.changeText(input, '   ');
+    
+    // Ensure that the state has not been updated because of the condition
+    expect(input.props.value).toBe('Test');
+
+    // Simulate clearing the TextInput
+    fireEvent.changeText(input, '');
+
+    // Ensure that the state has been updated correctly when the TextInput is cleared
+    expect(input.props.value).toBe('');
   });
 
   test('fetchData function navigates to Country screen on successful API response', async () => {
