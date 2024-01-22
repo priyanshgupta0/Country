@@ -21,9 +21,15 @@ describe('Home screeen', () => {
 
     expect(input.props.value).toBe('India');
 
+    // Simulate typing 'Test' into the TextInput
+    fireEvent.changeText(input, 'Test');
+
+    // Ensure that the state has been updated correctly
+    expect(input.props.value).toBe('Test');
+
     // Simulate typing spaces into the TextInput
     fireEvent.changeText(input, '   ');
-    
+
     // Ensure that the state has not been updated because of the condition
     expect(input.props.value).toBe('Test');
 
