@@ -8,23 +8,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {RootStackParamList} from '../App';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
-
-interface Props {
-  route: HomeScreenNavigationProp;
-}
 
 const mobileW = Dimensions.get('window').width;
 const mobileH = Dimensions.get('window').height;
 
-const Home: React.ComponentType<Props> = ({route}) => {
+function Home({navigation, route}: any) {
   const API = process.env.API;
   const [countryName, setCountryName] = useState<string>('');
-  const navigation = useNavigation();
   //   const [weatherData, setWeatherData] = useState({});
 
   const fetchData = async () => {
@@ -33,13 +23,9 @@ const Home: React.ComponentType<Props> = ({route}) => {
       const data = await response.json();
       console.log(data);
       if (data?.status != 404) {
-        const navigationParams: RootStackParamList['Country'] = {
-          dataToPass: data[0],
-        };
-        (navigation as unknown as HomeScreenNavigationProp).navigate(
-          'Country',
-          navigationParams,
-        );
+        navigation.navigate('Country', {
+          data: data[0],
+        });
       } else {
         Alert.alert('Alert', data.message);
       }
@@ -50,12 +36,13 @@ const Home: React.ComponentType<Props> = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.Heading}>CountryPedia</Text>
+      <Text style={styles.Heading}>Country Pedia 🌍</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter Country Name"
         value={countryName}
         onChangeText={text => setCountryName(text)}
+        testID="countryInput"
       />
       <TouchableOpacity
         style={countryName == '' ? styles.disabledButton : styles.activeButton}
@@ -66,7 +53,7 @@ const Home: React.ComponentType<Props> = ({route}) => {
       </TouchableOpacity>
     </View>
   );
-};
+}
 
 export default Home;
 
@@ -74,32 +61,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
-  },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover', // or 'stretch' or 'contain'
-    height: mobileH,
+    padding: mobileW * 0.1,
   },
   Heading: {
     fontSize: mobileW * 0.08,
     color: 'black',
     alignSelf: 'center',
     fontWeight: 'bold',
-  },
-  text: {
-    fontSize: mobileW * 0.04,
-    color: 'black',
-    alignSelf: 'center',
-    fontWeight: 'bold',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  box: {
-    margin: 10,
-    borderWidth: 2,
-    padding: 4,
-    borderRadius: 5,
-    borderColor: 'black',
+    marginBottom: mobileW * 0.05,
   },
   input: {
     height: 40,
@@ -130,13 +99,5 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     fontWeight: 'bold',
-  },
-  randomButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    width: mobileW * 0.25,
-    alignSelf: 'center',
-    marginHorizontal: mobileW * 0.05,
   },
 });

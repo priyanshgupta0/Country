@@ -15,15 +15,6 @@ import {CountryInfo} from '../App';
 const mobileW = Dimensions.get('window').width;
 const mobileH = Dimensions.get('window').height;
 
-type CountryRouteProp = RouteProp<
-  {Country: {dataToPass: CountryInfo}},
-  'Country'
->;
-
-interface Props {
-  route: CountryRouteProp;
-}
-
 interface WeatherInfo {
   coord: {
     lon: number;
@@ -67,7 +58,7 @@ interface WeatherInfo {
   cod: number;
 }
 
-const Country: React.ComponentType<Props> = ({route}) => {
+function Country({navigation, route}: any) {
   const {dataToPass} = route.params;
 
   const API_key = process.env.Wether_API_key;
@@ -96,13 +87,7 @@ const Country: React.ComponentType<Props> = ({route}) => {
       <Text style={styles.Heading}>{dataToPass?.name.common}</Text>
       <Image
         source={{uri: dataToPass?.flags.png}} // Replace with the actual URL
-        style={{
-          width: mobileW * 0.8,
-          height: mobileW * 0.4,
-          resizeMode: 'contain',
-          margin: mobileW * 0.02,
-          alignSelf: 'center',
-        }}
+        style={styles.flagstyle}
       />
       <Text style={styles.text}>Population : {dataToPass?.population}</Text>
       <Text style={styles.text}>Latitude : {dataToPass?.latlng[0]}</Text>
@@ -113,18 +98,20 @@ const Country: React.ComponentType<Props> = ({route}) => {
       <TouchableOpacity
         style={styles.activeButton}
         onPress={fetchWeather}
-        testID="nextButton">
+        testID="fetchWetherbutton">
         <Text style={styles.buttonText}>Weather</Text>
       </TouchableOpacity>
       {apiData ? (
         <View>
-          <Text style={styles.text}>Temperature : {apiData?.main.temp}</Text>
+          <Text style={styles.text}>
+            Temperature : {(apiData?.main.temp - 273.15).toFixed(2)}°C
+          </Text>
           <Text style={styles.text}>Wind Speed : {apiData?.wind.speed}</Text>
         </View>
       ) : null}
     </View>
   );
-};
+}
 
 export default Country;
 
@@ -140,11 +127,6 @@ const styles = StyleSheet.create({
     margin: mobileW * 0.02,
     alignSelf: 'center',
   },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover', // or 'stretch' or 'contain'
-    height: mobileH,
-  },
   Heading: {
     fontSize: mobileW * 0.08,
     color: 'black',
@@ -158,22 +140,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     justifyContent: 'center',
   },
-  box: {
-    margin: 10,
-    borderWidth: 2,
-    padding: 4,
-    borderRadius: 5,
-    borderColor: 'black',
-  },
-  input: {
-    height: 40,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 3,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    marginHorizontal: 10,
-  },
   activeButton: {
     backgroundColor: 'green',
     padding: 10,
@@ -181,26 +147,11 @@ const styles = StyleSheet.create({
     width: mobileW * 0.25,
     alignSelf: 'center',
     marginHorizontal: mobileW * 0.05,
-  },
-  disabledButton: {
-    backgroundColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-    width: mobileW * 0.25,
-    alignSelf: 'center',
-    marginHorizontal: mobileW * 0.05,
+    margin: 10,
   },
   buttonText: {
     color: 'black',
     textAlign: 'center',
     fontWeight: 'bold',
-  },
-  randomButton: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    width: mobileW * 0.25,
-    alignSelf: 'center',
-    marginHorizontal: mobileW * 0.05,
   },
 });
